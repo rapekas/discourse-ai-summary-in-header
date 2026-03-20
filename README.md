@@ -2,7 +2,7 @@
 
 Discourse **theme component**: moves the **discourse-ai** topic summarize button from the topic map into the topic title area (`#topic-title`), next to the heading.
 
-
+![dasih_horizon](./images/README/dasih_horizon.png)
 
 ## Requirements
 

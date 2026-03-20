@@ -1,3 +1,5 @@
+@use "lib/viewport";
+
 // Layout: title + AI summarize control on one row; category/tags full width below.
 // h1 must shrink (min-width: 0) or flex leaves it at full text width and the button wraps.
 #topic-title .title-wrapper {
@@ -26,7 +28,7 @@
 }
 
 // From ~tablet: keep title on one line with ellipsis so the button stays right of the title.
-@include breakpoint(tablet) {
+@include viewport.until(md) {
   #topic-title .title-wrapper > h1 {
     white-space: nowrap;
     overflow: hidden;
@@ -34,7 +36,7 @@
   }
 }
 
-@include breakpoint(mobile-large) {
+@include viewport.until(sm) {
   #topic-title .title-wrapper {
     align-items: flex-start;
 
