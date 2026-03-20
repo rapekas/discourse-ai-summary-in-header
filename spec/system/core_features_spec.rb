@@ -9,7 +9,7 @@ RSpec.describe "Core features" do
   # Same skips as Discourse Horizon: #create-topic / quick search menu are brittle with
   # some layouts; core still covers topic creation via /new-topic.
   it_behaves_like "having working core features",
-                  skip_examples: [:"search:quick_search", :topics:create]
+                  skip_examples: [:"search:quick_search", :"topics:create"]
 
   it "creates a new topic" do
     sign_in(current_user)
