@@ -1,0 +1,33 @@
+// Layout: title + AI summarize control on one row; category/tags full width below.
+#topic-title .title-wrapper {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  column-gap: 1em;
+  row-gap: 0.5em;
+
+  > h1 {
+    flex: 1 1 auto;
+    min-width: min(100%, 12em);
+    margin-bottom: 0;
+  }
+
+  > section.topic-map__additional-contents.toggle-summary.ai-summary-in-topic-header {
+    flex: 0 0 auto;
+    margin: 0;
+  }
+
+  .topic-category {
+    flex: 1 1 100%;
+  }
+}
+
+@include breakpoint(mobile-large) {
+  #topic-title .title-wrapper {
+    align-items: flex-start;
+
+    > section.topic-map__additional-contents.toggle-summary.ai-summary-in-topic-header {
+      width: 100%;
+    }
+  }
+}
