@@ -1,4 +1,5 @@
 // Layout: title + AI summarize control on one row; category/tags full width below.
+// h1 must shrink (min-width: 0) or flex leaves it at full text width and the button wraps.
 #topic-title .title-wrapper {
   display: flex;
   flex-wrap: wrap;
@@ -7,14 +8,16 @@
   row-gap: 0.5em;
 
   > h1 {
-    flex: 1 1 auto;
-    min-width: min(100%, 12em);
+    flex: 1 1 0;
+    min-width: 0;
     margin-bottom: 0;
   }
 
   > section.topic-map__additional-contents.toggle-summary.ai-summary-in-topic-header {
     flex: 0 0 auto;
+    flex-shrink: 0;
     margin: 0;
+    align-self: center;
   }
 
   .topic-category {
@@ -22,9 +25,25 @@
   }
 }
 
+// From ~tablet: keep title on one line with ellipsis so the button stays right of the title.
+@include breakpoint(tablet) {
+  #topic-title .title-wrapper > h1 {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+}
+
 @include breakpoint(mobile-large) {
   #topic-title .title-wrapper {
     align-items: flex-start;
+
+    > h1 {
+      max-width: 100%;
+      white-space: normal;
+      overflow: visible;
+      text-overflow: clip;
+    }
 
     > section.topic-map__additional-contents.toggle-summary.ai-summary-in-topic-header {
       width: 100%;

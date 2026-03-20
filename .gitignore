@@ -2,7 +2,4 @@ node_modules
 .discourse-site
 .eslintcache
 
-# Локальные черновики и заметки (не в репозитории)
-docs/META_TOPIC.md
-docs/LOCAL_CONTEXT.md
-docs/README.md
+docs/*
