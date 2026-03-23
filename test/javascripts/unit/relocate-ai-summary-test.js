@@ -3,6 +3,7 @@ import {
   addButtonToTimeline,
   addButtonToTitle,
   addButtonToToc,
+  removeStaleButtons,
 } from "discourse/theme/lib/relocate-ai-summary";
 
 function buildDoc() {
@@ -231,6 +232,73 @@ module(
         titleWrapper.querySelectorAll(".ai-summary-title-btn").length,
         0,
         "no button when not summarizable"
+      );
+    });
+  }
+);
+
+module(
+  "AI Summary In Topic Header | removeStaleButtons",
+  function () {
+    test("removes buttons that don't match keepClass", function (assert) {
+      const { doc, titleWrapper } = buildDoc();
+      const container = buildContainer();
+
+      addButtonToTitle({ container, rootDocument: doc });
+      assert.strictEqual(
+        doc.querySelectorAll(".ai-summary-btn").length,
+        1,
+        "one button before cleanup"
+      );
+
+      removeStaleButtons("ai-summary-toc-btn", doc);
+
+      assert.strictEqual(
+        titleWrapper.querySelectorAll(".ai-summary-title-btn").length,
+        0,
+        "title button removed"
+      );
+    });
+
+    test("keeps button that matches keepClass", function (assert) {
+      const { doc } = buildDoc();
+      const container = buildContainer();
+
+      addButtonToToc({ container, rootDocument: doc });
+      removeStaleButtons("ai-summary-toc-btn", doc);
+
+      assert.strictEqual(
+        doc.querySelectorAll(".ai-summary-toc-btn").length,
+        1,
+        "matching button preserved"
+      );
+    });
+
+    test("cleans up during layout transition (title → toc)", function (assert) {
+      const { doc, tocMain } = buildDoc();
+      const container = buildContainer();
+
+      addButtonToTitle({ container, rootDocument: doc });
+      assert.ok(
+        doc.querySelector(".ai-summary-title-btn"),
+        "title button exists"
+      );
+
+      removeStaleButtons("ai-summary-toc-btn", doc);
+      addButtonToToc({ container, rootDocument: doc });
+
+      assert.notOk(
+        doc.querySelector(".ai-summary-title-btn"),
+        "title button removed"
+      );
+      assert.ok(
+        tocMain.querySelector(".ai-summary-toc-btn"),
+        "toc button added"
+      );
+      assert.strictEqual(
+        doc.querySelectorAll(".ai-summary-btn").length,
+        1,
+        "exactly one button remains"
       );
     });
   }

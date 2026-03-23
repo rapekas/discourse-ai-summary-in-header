@@ -4,6 +4,7 @@ import {
   addButtonToTimeline,
   addButtonToTitle,
   addButtonToToc,
+  removeStaleButtons,
 } from "../lib/relocate-ai-summary";
 
 function debounce(fn, waitMs) {
@@ -29,6 +30,7 @@ export default apiInitializer("2.0.0", (api) => {
     schedule("afterRender", () => {
       if (site.mobileView) {
         if (settings.show_on_mobile) {
+          removeStaleButtons("ai-summary-title-btn");
           addButtonToTitle({ container });
         }
         return;
@@ -39,10 +41,13 @@ export default apiInitializer("2.0.0", (api) => {
       }
 
       if (document.querySelector(".d-toc-main")) {
+        removeStaleButtons("ai-summary-toc-btn");
         addButtonToToc({ container });
       } else if (document.querySelector(".timeline-controls")) {
+        removeStaleButtons("ai-summary-timeline-btn");
         addButtonToTimeline({ container });
       } else {
+        removeStaleButtons("ai-summary-title-btn");
         addButtonToTitle({ container });
       }
     });

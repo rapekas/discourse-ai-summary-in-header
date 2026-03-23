@@ -60,6 +60,21 @@ function createSummaryButton(container, rootDocument, extraClass) {
 }
 
 /**
+ * Removes AI summary buttons that don't match the given `keepClass`.
+ * Called before placing a button so that layout transitions (e.g. narrow → wide)
+ * don't leave stale duplicates.
+ */
+export function removeStaleButtons(keepClass, rootDocument = document) {
+  rootDocument
+    .querySelectorAll(".ai-summary-btn")
+    .forEach((btn) => {
+      if (!btn.classList.contains(keepClass)) {
+        btn.remove();
+      }
+    });
+}
+
+/**
  * Creates an AI summarize button in `.timeline-controls`.
  */
 export function addButtonToTimeline({ container, rootDocument = document }) {
