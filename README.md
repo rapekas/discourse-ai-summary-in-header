@@ -2,7 +2,7 @@
 
 Discourse **theme component**: adds a **discourse-ai** topic summarize button to the **topic sidebar** (timeline controls or Table of Contents) on desktop, and to the **topic title area** on mobile and narrow screens.
 
-![image-20260323193059247](./images/README/dasih_horizon.png)
+![image-20260323193059247](./images/README/dasih.gif)
 
 ## Requirements
 
