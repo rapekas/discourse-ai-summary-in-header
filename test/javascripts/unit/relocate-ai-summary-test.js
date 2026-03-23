@@ -40,30 +40,67 @@ function buildTopicPageDoc() {
 }
 
 module(
-  "discourse-ai-summary-in-header | relocateSummarizeSection",
+  "AI Summary In Topic Header | relocateSummarizeSection",
   function () {
-    test("moves summarize section from topic map after the h1", function (assert) {
-      const { doc, titleWrapper, h1, section } = buildTopicPageDoc();
+    test("clones section into title wrapper and hides original by default", function (assert) {
+      const { doc, titleWrapper, h1, section, topicMap } = buildTopicPageDoc();
 
       relocateSummarizeSection(doc);
 
       assert.ok(
-        titleWrapper.contains(section),
-        "section is under .title-wrapper"
-      );
-      assert.strictEqual(
-        section.previousElementSibling,
-        h1,
-        "section is inserted immediately after h1"
+        topicMap.contains(section),
+        "original section stays in topic map"
       );
       assert.ok(
-        section.classList.contains("ai-summary-in-topic-header"),
-        "marker class applied"
+        section.classList.contains("ai-summary-original-hidden"),
+        "original is marked hidden"
       );
+
+      const clone = titleWrapper.querySelector(
+        "section.ai-summary-in-topic-header"
+      );
+      assert.ok(clone, "clone is in title wrapper");
+      assert.notStrictEqual(clone, section, "clone is not the original node");
+      assert.strictEqual(
+        clone.previousElementSibling,
+        h1,
+        "clone is placed after h1"
+      );
+    });
+
+    test("keeps original visible when keepOriginal is true", function (assert) {
+      const { doc, titleWrapper, section, topicMap } = buildTopicPageDoc();
+
+      relocateSummarizeSection(doc, { keepOriginal: true });
+
+      assert.ok(topicMap.contains(section), "original stays in topic map");
       assert.notOk(
-        doc.querySelector(".topic-map").contains(section),
-        "section no longer under .topic-map"
+        section.classList.contains("ai-summary-original-hidden"),
+        "original is not hidden"
       );
+
+      const clone = titleWrapper.querySelector(
+        "section.ai-summary-in-topic-header"
+      );
+      assert.ok(clone, "clone is in title wrapper");
+    });
+
+    test("cloned button proxies click to the original button", function (assert) {
+      const { doc, button } = buildTopicPageDoc();
+      let clicked = false;
+      button.addEventListener("click", () => {
+        clicked = true;
+      });
+
+      relocateSummarizeSection(doc);
+
+      const clonedBtn = doc.querySelector(
+        "#topic-title .ai-summarization-button"
+      );
+      assert.ok(clonedBtn, "cloned button exists in header");
+
+      clonedBtn.click();
+      assert.ok(clicked, "click on clone triggered original button");
     });
 
     test("no-op when there is no summarize button in the topic map", function (assert) {
@@ -88,57 +125,19 @@ module(
       assert.ok(doc.querySelector(".topic-map").contains(section));
     });
 
-    test("replaces a previously moved section when a new one appears in the map", function (assert) {
-      const { doc, titleWrapper, h1, section, topicMap } = buildTopicPageDoc();
+    test("idempotent — does not insert a second clone", function (assert) {
+      const { doc, titleWrapper } = buildTopicPageDoc();
 
       relocateSummarizeSection(doc);
-      const first = section;
-
-      const section2 = doc.createElement("section");
-      section2.className = "topic-map__additional-contents toggle-summary";
-      const btn2 = doc.createElement("button");
-      btn2.className = "ai-summarization-button";
-      section2.appendChild(btn2);
-      topicMap.appendChild(section2);
+      const childrenAfterFirst = [...titleWrapper.children];
 
       relocateSummarizeSection(doc);
 
-      assert.notOk(titleWrapper.contains(first), "stale section removed");
-      assert.ok(titleWrapper.contains(section2), "new section moved");
-      assert.strictEqual(section2.previousElementSibling, h1);
-    });
-
-    test("clones section when keepOriginal is true", function (assert) {
-      const { doc, titleWrapper, h1, section, topicMap } = buildTopicPageDoc();
-
-      relocateSummarizeSection(doc, { keepOriginal: true });
-
-      assert.ok(
-        topicMap.contains(section),
-        "original section stays in topic map"
+      assert.deepEqual(
+        [...titleWrapper.children],
+        childrenAfterFirst,
+        "no duplicate clone inserted"
       );
-
-      const cloned = titleWrapper.querySelector(
-        "section.topic-map__additional-contents.toggle-summary"
-      );
-      assert.ok(cloned, "cloned section is in title wrapper");
-      assert.notStrictEqual(cloned, section, "cloned node is not the original");
-      assert.strictEqual(cloned.previousElementSibling, h1, "placed after h1");
-      assert.ok(
-        cloned.classList.contains("ai-summary-in-topic-header"),
-        "marker class applied to clone"
-      );
-    });
-
-    test("idempotent when section is already in the title wrapper", function (assert) {
-      const { doc, titleWrapper, section } = buildTopicPageDoc();
-
-      relocateSummarizeSection(doc);
-      const order = [...titleWrapper.children];
-
-      relocateSummarizeSection(doc);
-
-      assert.deepEqual([...titleWrapper.children], order);
     });
   }
 );

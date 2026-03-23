@@ -36,6 +36,12 @@
   }
 }
 
+// Original section hidden when the button was cloned to the header
+// (keep_original_button = false).
+.topic-map section.ai-summary-original-hidden {
+  display: none;
+}
+
 @include viewport.until(sm) {
   #topic-title .title-wrapper {
     align-items: flex-start;

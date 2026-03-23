@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-RSpec.describe "AI Summary in topic header theme" do
+RSpec.describe "AI Summary In Topic Header theme" do
   let!(:theme) { upload_theme_component }
 
   let(:topic) { Fabricate(:topic) }
