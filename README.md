@@ -19,6 +19,7 @@ Discourse **theme component**: adds a **discourse-ai** topic summarize button to
 ## Settings
 
 - **Show in timeline** — Show the summarize button in the sidebar (timeline or ToC). Enabled by default.
+- **Show on mobile** — Show the summarize button in the topic title area on mobile devices.
 - **Keep in reader mode** — Keep the summarize button visible when Reader Mode is active. Disabled by default.
 
 ## License
