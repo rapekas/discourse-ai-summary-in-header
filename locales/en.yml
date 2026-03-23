@@ -3,5 +3,5 @@ en:
     description: "Clones the AI summarize button into the topic timeline controls"
     settings:
       show_in_timeline: "Show the summarize button in the topic timeline controls (right sidebar)"
-      show_in_toc: "Show the summarize button at the top and bottom of the Table of Contents sidebar"
+      show_in_toc: "Show the summarize button at the top of the Table of Contents sidebar"
       keep_in_reader_mode: "Keep the summarize button visible in the timeline when Reader Mode is active"
