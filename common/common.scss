@@ -1,65 +1,13 @@
-@use "lib/viewport";
-
-// Layout: title + AI summarize control on one row; category/tags full width below.
-// h1 must shrink (min-width: 0) or flex leaves it at full text width and the button wraps.
-#topic-title .title-wrapper {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  column-gap: 1em;
-  row-gap: 0.5em;
-
-  > h1 {
-    flex: 1 1 0;
-    min-width: 0;
-    margin-bottom: 0;
-  }
-
-  > section.topic-map__additional-contents.toggle-summary.ai-summary-in-topic-header {
-    flex: 0 0 auto;
-    flex-shrink: 0;
-    margin: 0;
-    align-self: center;
-  }
-
-  .topic-category {
-    flex: 1 1 100%;
-  }
-}
-
-// From ~tablet: keep title on one line with ellipsis so the button stays right of the title.
-@include viewport.until(md) {
-  #topic-title .title-wrapper > h1 {
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-  }
-}
-
-// Original section hidden when the button was cloned to the header
-// (keep_original_button = false).
-.topic-map section.ai-summary-original-hidden {
-  display: none;
-}
-
 // Summarize button cloned into the topic timeline sidebar.
 .timeline-controls .ai-summary-timeline-btn {
-  order: -1;
+  margin-top: 0.25em;
 }
 
-@include viewport.until(sm) {
-  #topic-title .title-wrapper {
-    align-items: flex-start;
-
-    > h1 {
-      max-width: 100%;
-      white-space: normal;
-      overflow: visible;
-      text-overflow: clip;
-    }
-
-    > section.topic-map__additional-contents.toggle-summary.ai-summary-in-topic-header {
-      width: 100%;
-    }
-  }
+// Override Reader Mode hiding our button when keep_in_reader_mode is on.
+html.ai-summary-keep-in-reader-mode
+  .reader-mode
+  .timeline-controls
+  .ai-summary-timeline-btn {
+  opacity: 1;
+  pointer-events: auto;
 }

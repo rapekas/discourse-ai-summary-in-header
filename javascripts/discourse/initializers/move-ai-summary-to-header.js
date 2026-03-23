@@ -1,9 +1,6 @@
 import { apiInitializer } from "discourse/lib/api";
 import { schedule } from "@ember/runloop";
-import {
-  relocateSummarizeSection,
-  cloneButtonToTimeline,
-} from "../lib/relocate-ai-summary";
+import { cloneButtonToTimeline } from "../lib/relocate-ai-summary";
 
 function debounce(fn, waitMs) {
   let handle;
@@ -16,15 +13,15 @@ function debounce(fn, waitMs) {
 export default apiInitializer("2.0.0", (api) => {
   let observer;
 
+  if (settings.keep_in_reader_mode) {
+    document.documentElement.classList.add("ai-summary-keep-in-reader-mode");
+  }
+
   const run = debounce(() => {
-    schedule("afterRender", () => {
-      relocateSummarizeSection(document, {
-        keepOriginal: settings.keep_original_button,
-      });
-      if (settings.show_in_timeline) {
-        cloneButtonToTimeline();
-      }
-    });
+    if (!settings.show_in_timeline) {
+      return;
+    }
+    schedule("afterRender", () => cloneButtonToTimeline());
   }, 120);
 
   function attachObserver() {

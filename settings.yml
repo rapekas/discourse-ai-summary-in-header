@@ -1,6 +1,6 @@
-keep_original_button:
-  default: true
-  type: bool
 show_in_timeline:
   default: true
+  type: bool
+keep_in_reader_mode:
+  default: false
   type: bool

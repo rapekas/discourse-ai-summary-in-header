@@ -1,6 +1,6 @@
 en:
   theme_metadata:
-    description: "Moves the AI summarize button from the topic map into the topic title area"
+    description: "Clones the AI summarize button into the topic timeline controls"
     settings:
-      keep_original_button: "Keep the original button in the topic map (the button will appear both in the header and in its original location)"
       show_in_timeline: "Show the summarize button in the topic timeline controls (right sidebar)"
+      keep_in_reader_mode: "Keep the summarize button visible in the timeline when Reader Mode is active"

@@ -1,28 +1,8 @@
 import { module, test } from "qunit";
-import {
-  relocateSummarizeSection,
-  cloneButtonToTimeline,
-} from "discourse/theme/lib/relocate-ai-summary";
+import { cloneButtonToTimeline } from "discourse/theme/lib/relocate-ai-summary";
 
 function buildTopicPageDoc() {
   const doc = document.implementation.createHTMLDocument("topic");
-
-  const topicTitle = doc.createElement("div");
-  topicTitle.id = "topic-title";
-
-  const titleWrapper = doc.createElement("div");
-  titleWrapper.className = "title-wrapper";
-
-  const h1 = doc.createElement("h1");
-  h1.textContent = "Topic title";
-
-  const category = doc.createElement("div");
-  category.className = "topic-category";
-
-  titleWrapper.appendChild(h1);
-  titleWrapper.appendChild(category);
-  topicTitle.appendChild(titleWrapper);
-  doc.body.appendChild(topicTitle);
 
   const topicMap = doc.createElement("div");
   topicMap.className = "topic-map";
@@ -45,119 +25,21 @@ function buildTopicPageDoc() {
   const readerBtn = doc.createElement("button");
   readerBtn.className = "btn reader-mode-toggle";
   timelineControls.appendChild(readerBtn);
+
+  const adminBtn = doc.createElement("button");
+  adminBtn.className = "btn toggle-admin-menu";
+  timelineControls.appendChild(adminBtn);
+
   doc.body.appendChild(timelineControls);
 
-  return { doc, titleWrapper, h1, section, button, topicMap, timelineControls };
+  return { doc, button, topicMap, timelineControls, readerBtn, adminBtn };
 }
-
-module(
-  "AI Summary In Topic Header | relocateSummarizeSection",
-  function () {
-    test("clones section into title wrapper and hides original by default", function (assert) {
-      const { doc, titleWrapper, h1, section, topicMap } = buildTopicPageDoc();
-
-      relocateSummarizeSection(doc);
-
-      assert.ok(
-        topicMap.contains(section),
-        "original section stays in topic map"
-      );
-      assert.ok(
-        section.classList.contains("ai-summary-original-hidden"),
-        "original is marked hidden"
-      );
-
-      const clone = titleWrapper.querySelector(
-        "section.ai-summary-in-topic-header"
-      );
-      assert.ok(clone, "clone is in title wrapper");
-      assert.notStrictEqual(clone, section, "clone is not the original node");
-      assert.strictEqual(
-        clone.previousElementSibling,
-        h1,
-        "clone is placed after h1"
-      );
-    });
-
-    test("keeps original visible when keepOriginal is true", function (assert) {
-      const { doc, titleWrapper, section, topicMap } = buildTopicPageDoc();
-
-      relocateSummarizeSection(doc, { keepOriginal: true });
-
-      assert.ok(topicMap.contains(section), "original stays in topic map");
-      assert.notOk(
-        section.classList.contains("ai-summary-original-hidden"),
-        "original is not hidden"
-      );
-
-      const clone = titleWrapper.querySelector(
-        "section.ai-summary-in-topic-header"
-      );
-      assert.ok(clone, "clone is in title wrapper");
-    });
-
-    test("cloned button proxies click to the original button", function (assert) {
-      const { doc, button } = buildTopicPageDoc();
-      let clicked = false;
-      button.addEventListener("click", () => {
-        clicked = true;
-      });
-
-      relocateSummarizeSection(doc);
-
-      const clonedBtn = doc.querySelector(
-        "#topic-title .ai-summarization-button"
-      );
-      assert.ok(clonedBtn, "cloned button exists in header");
-
-      clonedBtn.click();
-      assert.ok(clicked, "click on clone triggered original button");
-    });
-
-    test("no-op when there is no summarize button in the topic map", function (assert) {
-      const { doc, titleWrapper } = buildTopicPageDoc();
-      doc.querySelector(".ai-summarization-button").remove();
-
-      relocateSummarizeSection(doc);
-
-      assert.strictEqual(
-        titleWrapper.querySelectorAll("section.topic-map__additional-contents")
-          .length,
-        0
-      );
-    });
-
-    test("no-op when #topic-title .title-wrapper is missing", function (assert) {
-      const { doc, section } = buildTopicPageDoc();
-      doc.getElementById("topic-title").remove();
-
-      relocateSummarizeSection(doc);
-
-      assert.ok(doc.querySelector(".topic-map").contains(section));
-    });
-
-    test("idempotent — does not insert a second clone", function (assert) {
-      const { doc, titleWrapper } = buildTopicPageDoc();
-
-      relocateSummarizeSection(doc);
-      const childrenAfterFirst = [...titleWrapper.children];
-
-      relocateSummarizeSection(doc);
-
-      assert.deepEqual(
-        [...titleWrapper.children],
-        childrenAfterFirst,
-        "no duplicate clone inserted"
-      );
-    });
-  }
-);
 
 module(
   "AI Summary In Topic Header | cloneButtonToTimeline",
   function () {
-    test("clones button into timeline-controls before existing buttons", function (assert) {
-      const { doc, timelineControls } = buildTopicPageDoc();
+    test("clones button into timeline-controls after existing buttons", function (assert) {
+      const { doc, timelineControls, adminBtn } = buildTopicPageDoc();
 
       cloneButtonToTimeline(doc);
 
@@ -168,9 +50,9 @@ module(
         "marker class applied"
       );
       assert.strictEqual(
-        timelineControls.firstChild,
+        adminBtn.nextElementSibling,
         btn,
-        "inserted before existing buttons"
+        "appended after existing buttons"
       );
     });
 
