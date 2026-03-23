@@ -1,5 +1,5 @@
 import { module, test } from "qunit";
-import { relocateSummarizeSection } from "../../../javascripts/discourse/lib/relocate-ai-summary";
+import { relocateSummarizeSection } from "discourse/theme/lib/relocate-ai-summary";
 
 function buildTopicPageDoc() {
   const doc = document.implementation.createHTMLDocument("topic");
