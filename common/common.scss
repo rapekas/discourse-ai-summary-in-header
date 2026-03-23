@@ -26,15 +26,30 @@
 
 // When keep_in_reader_mode is on, override Reader Mode opacity for
 // our button and nearby controls; unify visual style.
-html.ai-summary-keep-in-reader-mode .reader-mode .timeline-controls {
-  .ai-summary-timeline-btn,
-  .toggle-admin-menu {
-    opacity: 0.4;
-    pointer-events: auto;
+html.ai-summary-keep-in-reader-mode .reader-mode {
+  .timeline-controls {
+    .ai-summary-timeline-btn,
+    .toggle-admin-menu {
+      opacity: 0.4;
+      pointer-events: auto;
+      position: relative;
+      z-index: 104;
+    }
+
+    .ai-summary-timeline-btn:hover,
+    .toggle-admin-menu:hover {
+      opacity: 0.7;
+    }
   }
 
-  .ai-summary-timeline-btn:hover,
-  .toggle-admin-menu:hover {
-    opacity: 0.7;
+  .d-toc-main .ai-summary-toc-btn {
+    opacity: 0.4;
+    pointer-events: auto;
+    position: relative;
+    z-index: 104;
+
+    &:hover {
+      opacity: 0.7;
+    }
   }
 }
