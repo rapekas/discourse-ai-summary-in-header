@@ -65,3 +65,37 @@ export function relocateSummarizeSection(
     target.appendChild(clone);
   }
 }
+
+/**
+ * Clones the AI summarize button into `.timeline-controls`, placed before the
+ * existing control buttons. Proxy-clicks the original Glimmer button.
+ *
+ * @param {Document} [rootDocument=document]
+ */
+export function cloneButtonToTimeline(rootDocument = document) {
+  const timeline = rootDocument.querySelector(".timeline-controls");
+  if (!timeline) {
+    return;
+  }
+
+  if (timeline.querySelector(".ai-summarization-button")) {
+    return;
+  }
+
+  const originalBtn = rootDocument.querySelector(
+    ".topic-map .ai-summarization-button"
+  );
+  if (!originalBtn) {
+    return;
+  }
+
+  const btn = originalBtn.cloneNode(true);
+  btn.classList.add("ai-summary-timeline-btn");
+  btn.addEventListener("click", (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    originalBtn.click();
+  });
+
+  timeline.insertBefore(btn, timeline.firstChild);
+}

@@ -42,6 +42,11 @@
   display: none;
 }
 
+// Summarize button cloned into the topic timeline sidebar.
+.timeline-controls .ai-summary-timeline-btn {
+  order: -1;
+}
+
 @include viewport.until(sm) {
   #topic-title .title-wrapper {
     align-items: flex-start;
