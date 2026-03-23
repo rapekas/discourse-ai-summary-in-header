@@ -19,33 +19,15 @@ async function loadAiSummaryModal() {
   return modalModule?.default;
 }
 
-/**
- * Creates an AI summarize button in `.timeline-controls`.
- * On click, opens AiSummaryModal directly via the modal service —
- * no dependency on topic map being in the DOM.
- *
- * @param {Object} options
- * @param {Object} options.container - Discourse app container (for service lookups)
- * @param {Document} [options.rootDocument=document]
- */
-export function addButtonToTimeline({ container, rootDocument = document }) {
-  const timeline = rootDocument.querySelector(".timeline-controls");
-  if (!timeline) {
-    return;
-  }
-
-  if (timeline.querySelector(".ai-summary-timeline-btn")) {
-    return;
-  }
-
+function createSummaryButton(container, rootDocument, extraClass) {
   const topicController = container.lookup("controller:topic");
   if (!topicController?.model?.summarizable) {
-    return;
+    return null;
   }
 
   const btn = rootDocument.createElement("button");
   btn.type = "button";
-  btn.className = "btn btn-icon-text btn-default ai-summary-timeline-btn";
+  btn.className = `btn btn-icon-text btn-default ai-summary-btn ${extraClass}`;
   btn.title = I18n.t("summary.buttons.generate");
 
   const icon = iconHTML("discourse-sparkles");
@@ -70,5 +52,49 @@ export function addButtonToTimeline({ container, rootDocument = document }) {
     });
   });
 
-  timeline.appendChild(btn);
+  return btn;
+}
+
+/**
+ * Creates an AI summarize button in `.timeline-controls`.
+ */
+export function addButtonToTimeline({ container, rootDocument = document }) {
+  const timeline = rootDocument.querySelector(".timeline-controls");
+  if (!timeline) {
+    return;
+  }
+
+  if (timeline.querySelector(".ai-summary-timeline-btn")) {
+    return;
+  }
+
+  const btn = createSummaryButton(container, rootDocument, "ai-summary-timeline-btn");
+  if (btn) {
+    timeline.appendChild(btn);
+  }
+}
+
+/**
+ * Creates AI summarize buttons at the top and bottom of the Table of Contents
+ * (`.d-toc-main` from the discourse-table-of-contents theme component).
+ */
+export function addButtonsToToc({ container, rootDocument = document }) {
+  const toc = rootDocument.querySelector(".d-toc-main");
+  if (!toc) {
+    return;
+  }
+
+  if (toc.querySelector(".ai-summary-toc-btn")) {
+    return;
+  }
+
+  const topBtn = createSummaryButton(container, rootDocument, "ai-summary-toc-btn ai-summary-toc-top");
+  const bottomBtn = createSummaryButton(container, rootDocument, "ai-summary-toc-btn ai-summary-toc-bottom");
+
+  if (topBtn) {
+    toc.insertBefore(topBtn, toc.firstChild);
+  }
+  if (bottomBtn) {
+    toc.appendChild(bottomBtn);
+  }
 }

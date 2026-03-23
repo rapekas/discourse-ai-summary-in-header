@@ -14,6 +14,23 @@
   }
 }
 
+// Summarize buttons in Table of Contents sidebar.
+.d-toc-main {
+  .ai-summary-toc-btn {
+    width: 100%;
+    box-sizing: border-box;
+    justify-content: center;
+  }
+
+  .ai-summary-toc-top {
+    margin-bottom: 0.5em;
+  }
+
+  .ai-summary-toc-bottom {
+    margin-top: 0.5em;
+  }
+}
+
 // When keep_in_reader_mode is on, override Reader Mode opacity for
 // our button and nearby controls; unify visual style.
 html.ai-summary-keep-in-reader-mode .reader-mode .timeline-controls {

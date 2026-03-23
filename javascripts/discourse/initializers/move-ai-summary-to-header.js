@@ -1,6 +1,9 @@
 import { apiInitializer } from "discourse/lib/api";
 import { schedule } from "@ember/runloop";
-import { addButtonToTimeline } from "../lib/relocate-ai-summary";
+import {
+  addButtonToTimeline,
+  addButtonsToToc,
+} from "../lib/relocate-ai-summary";
 
 function debounce(fn, waitMs) {
   let handle;
@@ -20,10 +23,14 @@ export default apiInitializer("2.0.0", (api) => {
   }
 
   const run = debounce(() => {
-    if (!settings.show_in_timeline) {
-      return;
-    }
-    schedule("afterRender", () => addButtonToTimeline({ container }));
+    schedule("afterRender", () => {
+      if (settings.show_in_timeline) {
+        addButtonToTimeline({ container });
+      }
+      if (settings.show_in_toc) {
+        addButtonsToToc({ container });
+      }
+    });
   }, 120);
 
   function attachMainObserver() {
