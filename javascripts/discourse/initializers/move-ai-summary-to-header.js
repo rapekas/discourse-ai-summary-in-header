@@ -11,7 +11,8 @@ function debounce(fn, waitMs) {
 }
 
 export default apiInitializer("2.0.0", (api) => {
-  let observer;
+  let mainObserver;
+  let bodyObserver;
 
   if (settings.keep_in_reader_mode) {
     document.documentElement.classList.add("ai-summary-keep-in-reader-mode");
@@ -24,10 +25,10 @@ export default apiInitializer("2.0.0", (api) => {
     schedule("afterRender", () => cloneButtonToTimeline());
   }, 120);
 
-  function attachObserver() {
-    if (observer) {
-      observer.disconnect();
-      observer = null;
+  function attachMainObserver() {
+    if (mainObserver) {
+      mainObserver.disconnect();
+      mainObserver = null;
     }
 
     const root = document.querySelector("#main-outlet");
@@ -35,17 +36,30 @@ export default apiInitializer("2.0.0", (api) => {
       return;
     }
 
-    observer = new MutationObserver(run);
-    observer.observe(root, { childList: true, subtree: true });
+    mainObserver = new MutationObserver(run);
+    mainObserver.observe(root, { childList: true, subtree: true });
+  }
+
+  function attachBodyObserver() {
+    if (bodyObserver) {
+      return;
+    }
+
+    bodyObserver = new MutationObserver(() => {
+      run();
+      attachMainObserver();
+    });
+    bodyObserver.observe(document.body, { childList: true, subtree: false });
   }
 
   api.onPageChange(() => {
     run();
-    attachObserver();
+    attachMainObserver();
   });
 
   schedule("afterRender", () => {
     run();
-    attachObserver();
+    attachMainObserver();
+    attachBodyObserver();
   });
 });
