@@ -1,10 +1,14 @@
 /**
- * Moves the discourse-ai summarize control from the topic map into the topic
- * title area. Accepts an optional Document for unit tests.
+ * Moves (or clones) the discourse-ai summarize control from the topic map
+ * into the topic title area.
  *
  * @param {Document} [rootDocument=document]
+ * @param {{ keepOriginal?: boolean }} [options]
  */
-export function relocateSummarizeSection(rootDocument = document) {
+export function relocateSummarizeSection(
+  rootDocument = document,
+  { keepOriginal = false } = {}
+) {
   const target = rootDocument.querySelector("#topic-title .title-wrapper");
   if (!target) {
     return;
@@ -30,12 +34,13 @@ export function relocateSummarizeSection(rootDocument = document) {
     .querySelectorAll("section.topic-map__additional-contents.toggle-summary")
     .forEach((node) => node.remove());
 
-  section.classList.add("ai-summary-in-topic-header");
+  const nodeToInsert = keepOriginal ? section.cloneNode(true) : section;
+  nodeToInsert.classList.add("ai-summary-in-topic-header");
 
   const h1 = target.querySelector("h1");
   if (h1?.nextSibling) {
-    target.insertBefore(section, h1.nextSibling);
+    target.insertBefore(nodeToInsert, h1.nextSibling);
   } else {
-    target.appendChild(section);
+    target.appendChild(nodeToInsert);
   }
 }

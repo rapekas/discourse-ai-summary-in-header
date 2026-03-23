@@ -108,6 +108,28 @@ module(
       assert.strictEqual(section2.previousElementSibling, h1);
     });
 
+    test("clones section when keepOriginal is true", function (assert) {
+      const { doc, titleWrapper, h1, section, topicMap } = buildTopicPageDoc();
+
+      relocateSummarizeSection(doc, { keepOriginal: true });
+
+      assert.ok(
+        topicMap.contains(section),
+        "original section stays in topic map"
+      );
+
+      const cloned = titleWrapper.querySelector(
+        "section.topic-map__additional-contents.toggle-summary"
+      );
+      assert.ok(cloned, "cloned section is in title wrapper");
+      assert.notStrictEqual(cloned, section, "cloned node is not the original");
+      assert.strictEqual(cloned.previousElementSibling, h1, "placed after h1");
+      assert.ok(
+        cloned.classList.contains("ai-summary-in-topic-header"),
+        "marker class applied to clone"
+      );
+    });
+
     test("idempotent when section is already in the title wrapper", function (assert) {
       const { doc, titleWrapper, section } = buildTopicPageDoc();
 

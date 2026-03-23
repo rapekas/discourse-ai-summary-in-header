@@ -2,4 +2,4 @@ en:
   theme_metadata:
     description: "Moves the AI summarize button from the topic map into the topic title area"
     settings:
-      keep_original_button: "Keep the summarize button in its original location (topic map) instead of moving it to the topic header"
+      keep_original_button: "Keep the original button in the topic map (the button will appear both in the header and in its original location)"
