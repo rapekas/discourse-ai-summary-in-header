@@ -1,11 +1,8 @@
 // Summarize button cloned into the topic timeline sidebar.
-.timeline-controls {
-  align-items: stretch;
-
-  .ai-summary-timeline-btn {
-    margin-top: 0.25em;
-    box-sizing: border-box;
-  }
+.timeline-controls .ai-summary-timeline-btn {
+  margin-top: 0.25em;
+  min-height: 35.5px;
+  box-sizing: border-box;
 }
 
 // When keep_in_reader_mode is on, override Reader Mode opacity for
