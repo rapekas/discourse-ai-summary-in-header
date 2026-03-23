@@ -27,8 +27,10 @@ export default apiInitializer("2.0.0", (api) => {
 
   const run = debounce(() => {
     schedule("afterRender", () => {
-      if (site.mobileView && settings.show_on_mobile) {
-        addButtonToTitle({ container });
+      if (site.mobileView) {
+        if (settings.show_on_mobile) {
+          addButtonToTitle({ container });
+        }
         return;
       }
 
@@ -38,8 +40,10 @@ export default apiInitializer("2.0.0", (api) => {
 
       if (document.querySelector(".d-toc-main")) {
         addButtonToToc({ container });
-      } else {
+      } else if (document.querySelector(".timeline-controls")) {
         addButtonToTimeline({ container });
+      } else {
+        addButtonToTitle({ container });
       }
     });
   }, 120);

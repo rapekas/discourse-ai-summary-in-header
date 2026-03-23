@@ -24,7 +24,7 @@
   }
 }
 
-// Summarize button inside topic title (mobile placement).
+// Summarize button inside topic title (mobile + narrow desktop fallback).
 #topic-title .title-wrapper .ai-summary-title-btn {
   width: 100%;
   box-sizing: border-box;
