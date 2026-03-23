@@ -1,6 +1,6 @@
 # AI Summary In Topic Header
 
-Discourse **theme component**: adds a **discourse-ai** topic summarize button to the topic sidebar — either in the **timeline controls** or at the top of the **Table of Contents** ([DiscoTOC](https://github.com/discourse/DiscoTOC)), depending on which is present.
+Discourse **theme component**: adds a **discourse-ai** topic summarize button to the **topic sidebar** (timeline controls or Table of Contents) on desktop, and to the **topic title area** on mobile and narrow screens.
 
 ## Requirements
 
@@ -18,9 +18,21 @@ Discourse **theme component**: adds a **discourse-ai** topic summarize button to
 
 ## Settings
 
-- **Show in timeline** — Show the summarize button in the sidebar (timeline or ToC). Enabled by default.
-- **Show on mobile** — Show the summarize button in the topic title area on mobile devices.
-- **Keep in reader mode** — Keep the summarize button visible when Reader Mode is active. Disabled by default.
+| Setting                 | Default | Description                                                                                                                                                       |
+| ----------------------- | ------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **Show in timeline**    | On      | Show the summarize button in the sidebar (timeline or ToC). On narrow desktop screens where the sidebar is hidden, the button falls back to the topic title area. |
+| **Show on mobile**      | On      | Show the summarize button in the topic title area on mobile devices.                                                                                              |
+| **Keep in reader mode** | Off     | Keep the button visible when [Reader Mode](https://github.com/discourse/reader-mode) is active.                                                                   |
+
+## How it works
+
+The button placement adapts to the available layout:
+
+1. **Desktop (wide)** — sidebar is visible → button in **ToC** (if [DiscoTOC](https://github.com/discourse/DiscoTOC) present) or **timeline controls**.
+2. **Desktop (narrow)** — sidebar hidden by Discourse → button in the **topic title area** (below the title and category/tags).
+3. **Mobile** — button in the **topic title area**.
+
+When the browser window is resized, the button automatically moves to the correct location (stale buttons from previous layouts are cleaned up).
 
 ## License
 
