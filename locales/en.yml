@@ -1,6 +1,6 @@
 en:
   theme_metadata:
-    description: "Adds its own AI summarize button in the topic sidebar (timeline or Table of Contents) on desktop and in the topic title area on narrow layouts and mobile; opens the discourse-ai summary modal directly without cloning the original button."
+    description: "Adds its own AI summarize button in the topic sidebar."
     settings:
       show_in_timeline: "Show the summarize button in the topic timeline controls (right sidebar). When DiscoTOC is active, the button appears in the Table of Contents instead."
       show_on_mobile: "Show the summarize button in the topic title area on mobile devices"
