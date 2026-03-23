@@ -4,11 +4,20 @@
   margin-left: 0.5em;
 }
 
-// Override Reader Mode hiding our button when keep_in_reader_mode is on.
+// Override Reader Mode hiding our button and the admin menu button
+// when keep_in_reader_mode is on.
 html.ai-summary-keep-in-reader-mode
   .reader-mode
   .timeline-controls
   .ai-summary-timeline-btn {
   opacity: 1;
+  pointer-events: auto;
+}
+
+html.ai-summary-keep-in-reader-mode
+  .reader-mode
+  .timeline-controls
+  .toggle-admin-menu {
+  opacity: 0.35;
   pointer-events: auto;
 }
