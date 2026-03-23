@@ -78,7 +78,7 @@ export function addButtonToTimeline({ container, rootDocument = document }) {
  * Creates AI summarize buttons at the top and bottom of the Table of Contents
  * (`.d-toc-main` from the discourse-table-of-contents theme component).
  */
-export function addButtonsToToc({ container, rootDocument = document }) {
+export function addButtonToToc({ container, rootDocument = document }) {
   const toc = rootDocument.querySelector(".d-toc-main");
   if (!toc) {
     return;
@@ -88,13 +88,8 @@ export function addButtonsToToc({ container, rootDocument = document }) {
     return;
   }
 
-  const topBtn = createSummaryButton(container, rootDocument, "ai-summary-toc-btn ai-summary-toc-top");
-  const bottomBtn = createSummaryButton(container, rootDocument, "ai-summary-toc-btn ai-summary-toc-bottom");
-
-  if (topBtn) {
-    toc.insertBefore(topBtn, toc.firstChild);
-  }
-  if (bottomBtn) {
-    toc.appendChild(bottomBtn);
+  const btn = createSummaryButton(container, rootDocument, "ai-summary-toc-btn");
+  if (btn) {
+    toc.insertBefore(btn, toc.firstChild);
   }
 }

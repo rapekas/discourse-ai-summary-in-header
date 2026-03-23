@@ -14,20 +14,13 @@
   }
 }
 
-// Summarize buttons in Table of Contents sidebar.
+// Summarize button at the top of Table of Contents sidebar.
 .d-toc-main {
   .ai-summary-toc-btn {
     width: 100%;
     box-sizing: border-box;
     justify-content: center;
-  }
-
-  .ai-summary-toc-top {
     margin-bottom: 0.5em;
-  }
-
-  .ai-summary-toc-bottom {
-    margin-top: 0.5em;
   }
 }
 

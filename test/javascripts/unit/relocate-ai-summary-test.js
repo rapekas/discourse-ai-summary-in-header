@@ -1,7 +1,7 @@
 import { module, test } from "qunit";
 import {
   addButtonToTimeline,
-  addButtonsToToc,
+  addButtonToToc,
 } from "discourse/theme/lib/relocate-ai-summary";
 
 function buildDoc() {
@@ -113,37 +113,33 @@ module(
 );
 
 module(
-  "AI Summary In Topic Header | addButtonsToToc",
+  "AI Summary In Topic Header | addButtonToToc",
   function () {
-    test("creates buttons at top and bottom of ToC", function (assert) {
+    test("creates button at the top of ToC", function (assert) {
       const { doc, tocMain } = buildDoc();
       const container = buildContainer();
 
-      addButtonsToToc({ container, rootDocument: doc });
+      addButtonToToc({ container, rootDocument: doc });
 
       const buttons = tocMain.querySelectorAll(".ai-summary-toc-btn");
-      assert.strictEqual(buttons.length, 2, "two buttons in ToC");
+      assert.strictEqual(buttons.length, 1, "one button in ToC");
       assert.ok(
-        tocMain.firstElementChild.classList.contains("ai-summary-toc-top"),
-        "top button is first child"
-      );
-      assert.ok(
-        tocMain.lastElementChild.classList.contains("ai-summary-toc-bottom"),
-        "bottom button is last child"
+        tocMain.firstElementChild.classList.contains("ai-summary-toc-btn"),
+        "button is first child"
       );
     });
 
-    test("idempotent — does not insert duplicate buttons", function (assert) {
+    test("idempotent — does not insert a second button", function (assert) {
       const { doc, tocMain } = buildDoc();
       const container = buildContainer();
 
-      addButtonsToToc({ container, rootDocument: doc });
-      addButtonsToToc({ container, rootDocument: doc });
+      addButtonToToc({ container, rootDocument: doc });
+      addButtonToToc({ container, rootDocument: doc });
 
       assert.strictEqual(
         tocMain.querySelectorAll(".ai-summary-toc-btn").length,
-        2,
-        "still only two buttons"
+        1,
+        "still only one button"
       );
     });
 
@@ -152,7 +148,7 @@ module(
       doc.querySelector(".d-toc-main").remove();
       const container = buildContainer();
 
-      addButtonsToToc({ container, rootDocument: doc });
+      addButtonToToc({ container, rootDocument: doc });
 
       assert.ok(true, "no error thrown");
     });
@@ -161,12 +157,12 @@ module(
       const { doc, tocMain } = buildDoc();
       const container = buildContainer({ summarizable: false });
 
-      addButtonsToToc({ container, rootDocument: doc });
+      addButtonToToc({ container, rootDocument: doc });
 
       assert.strictEqual(
         tocMain.querySelectorAll(".ai-summary-toc-btn").length,
         0,
-        "no buttons when not summarizable"
+        "no button when not summarizable"
       );
     });
   }

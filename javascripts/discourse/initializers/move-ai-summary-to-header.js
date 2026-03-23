@@ -2,7 +2,7 @@ import { apiInitializer } from "discourse/lib/api";
 import { schedule } from "@ember/runloop";
 import {
   addButtonToTimeline,
-  addButtonsToToc,
+  addButtonToToc,
 } from "../lib/relocate-ai-summary";
 
 function debounce(fn, waitMs) {
@@ -28,7 +28,7 @@ export default apiInitializer("2.0.0", (api) => {
         addButtonToTimeline({ container });
       }
       if (settings.show_in_toc) {
-        addButtonsToToc({ container });
+        addButtonToToc({ container });
       }
     });
   }, 120);
