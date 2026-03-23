@@ -1,7 +1,7 @@
 {
   "name": "AI Summary In Topic Header",
   "component": true,
-  "about_url": "https://github.com/rapekas/discourse-ai-summary-in-header",
+  "about_url": "https://meta.discourse.org/t/ai-summary-in-topic-header/399069",
   "license_url": "https://github.com/rapekas/discourse-ai-summary-in-header/blob/main/LICENSE.txt",
   "theme_version": "1.0.0"
 }
