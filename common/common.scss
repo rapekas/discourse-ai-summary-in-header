@@ -1,12 +1,13 @@
 // Summarize button cloned into the topic timeline sidebar.
 .timeline-controls {
+  gap: 2px;
+
   .ai-summary-timeline-btn {
     height: 39px;
     box-sizing: border-box;
   }
 
-  // Compensate for Reader Mode component's margin-right on .reader-mode-toggle
-  // to keep even spacing between all buttons.
+  // Remove Reader Mode component's extra margin to let gap handle spacing.
   .reader-mode-toggle {
     margin-right: 0;
   }
