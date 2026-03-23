@@ -24,11 +24,13 @@ export default apiInitializer("2.0.0", (api) => {
 
   const run = debounce(() => {
     schedule("afterRender", () => {
-      if (settings.show_in_timeline) {
-        addButtonToTimeline({ container });
-      }
-      if (settings.show_in_toc) {
+      const tocPresent =
+        settings.show_in_toc && document.querySelector(".d-toc-main");
+
+      if (tocPresent) {
         addButtonToToc({ container });
+      } else if (settings.show_in_timeline) {
+        addButtonToTimeline({ container });
       }
     });
   }, 120);
