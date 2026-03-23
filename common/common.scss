@@ -8,7 +8,8 @@
   }
 
   // Remove Reader Mode component's extra margin to let gap handle spacing.
-  .reader-mode-toggle {
+  // Uses higher specificity to override Reader Mode's .reader-mode-toggle rule.
+  button.reader-mode-toggle {
     margin-right: 0;
   }
 }
