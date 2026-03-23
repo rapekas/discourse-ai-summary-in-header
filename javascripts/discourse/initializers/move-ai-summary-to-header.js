@@ -2,6 +2,7 @@ import { apiInitializer } from "discourse/lib/api";
 import { schedule } from "@ember/runloop";
 import {
   addButtonToTimeline,
+  addButtonToTitle,
   addButtonToToc,
 } from "../lib/relocate-ai-summary";
 
@@ -22,11 +23,19 @@ export default apiInitializer("2.0.0", (api) => {
     document.documentElement.classList.add("ai-summary-keep-in-reader-mode");
   }
 
+  const site = container.lookup("service:site");
+
   const run = debounce(() => {
-    if (!settings.show_in_timeline) {
-      return;
-    }
     schedule("afterRender", () => {
+      if (site.mobileView && settings.show_on_mobile) {
+        addButtonToTitle({ container });
+        return;
+      }
+
+      if (!settings.show_in_timeline) {
+        return;
+      }
+
       if (document.querySelector(".d-toc-main")) {
         addButtonToToc({ container });
       } else {

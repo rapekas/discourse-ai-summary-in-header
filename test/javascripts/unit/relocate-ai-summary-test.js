@@ -1,6 +1,7 @@
 import { module, test } from "qunit";
 import {
   addButtonToTimeline,
+  addButtonToTitle,
   addButtonToToc,
 } from "discourse/theme/lib/relocate-ai-summary";
 
@@ -33,7 +34,17 @@ function buildDoc() {
 
   doc.body.appendChild(tocMain);
 
-  return { doc, timelineControls, tocMain };
+  const topicTitle = doc.createElement("div");
+  topicTitle.id = "topic-title";
+  const titleWrapper = doc.createElement("div");
+  titleWrapper.className = "title-wrapper";
+  const h1 = doc.createElement("h1");
+  h1.textContent = "Test Topic";
+  titleWrapper.appendChild(h1);
+  topicTitle.appendChild(titleWrapper);
+  doc.body.appendChild(topicTitle);
+
+  return { doc, timelineControls, tocMain, titleWrapper };
 }
 
 function buildContainer({ summarizable = true } = {}) {
@@ -161,6 +172,63 @@ module(
 
       assert.strictEqual(
         tocMain.querySelectorAll(".ai-summary-toc-btn").length,
+        0,
+        "no button when not summarizable"
+      );
+    });
+  }
+);
+
+module(
+  "AI Summary In Topic Header | addButtonToTitle",
+  function () {
+    test("creates button in title-wrapper", function (assert) {
+      const { doc, titleWrapper } = buildDoc();
+      const container = buildContainer();
+
+      addButtonToTitle({ container, rootDocument: doc });
+
+      const btn = titleWrapper.querySelector(".ai-summary-title-btn");
+      assert.ok(btn, "button created in title-wrapper");
+      assert.strictEqual(
+        titleWrapper.lastElementChild,
+        btn,
+        "appended after existing children"
+      );
+    });
+
+    test("idempotent — does not insert a second button", function (assert) {
+      const { doc, titleWrapper } = buildDoc();
+      const container = buildContainer();
+
+      addButtonToTitle({ container, rootDocument: doc });
+      addButtonToTitle({ container, rootDocument: doc });
+
+      assert.strictEqual(
+        titleWrapper.querySelectorAll(".ai-summary-title-btn").length,
+        1,
+        "only one button in title-wrapper"
+      );
+    });
+
+    test("no-op when #topic-title is missing", function (assert) {
+      const { doc } = buildDoc();
+      doc.querySelector("#topic-title").remove();
+      const container = buildContainer();
+
+      addButtonToTitle({ container, rootDocument: doc });
+
+      assert.ok(true, "no error thrown");
+    });
+
+    test("no-op when topic is not summarizable", function (assert) {
+      const { doc, titleWrapper } = buildDoc();
+      const container = buildContainer({ summarizable: false });
+
+      addButtonToTitle({ container, rootDocument: doc });
+
+      assert.strictEqual(
+        titleWrapper.querySelectorAll(".ai-summary-title-btn").length,
         0,
         "no button when not summarizable"
       );

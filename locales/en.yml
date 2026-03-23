@@ -3,4 +3,5 @@ en:
     description: "Clones the AI summarize button into the topic timeline controls"
     settings:
       show_in_timeline: "Show the summarize button in the topic timeline controls (right sidebar). When DiscoTOC is active, the button appears in the Table of Contents instead."
+      show_on_mobile: "Show the summarize button in the topic title area on mobile devices"
       keep_in_reader_mode: "Keep the summarize button visible in the timeline when Reader Mode is active"

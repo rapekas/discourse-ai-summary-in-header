@@ -1,12 +1,15 @@
-# AI Summary in topic header
+# AI Summary In Topic Header
 
-Discourse **theme component**: moves the **discourse-ai** topic summarize button from the topic map into the topic title area (`#topic-title`), next to the heading.
-
-![dasih_horizon](./images/README/dasih_horizon.png)
+Discourse **theme component**: adds a **discourse-ai** topic summarize button to the topic sidebar — either in the **timeline controls** or at the top of the **Table of Contents** ([DiscoTOC](https://github.com/discourse/DiscoTOC)), depending on which is present.
 
 ## Requirements
 
 - [discourse-ai](https://github.com/discourse/discourse-ai) with topic summarization enabled for your users.
+
+## Compatibility
+
+- **[DiscoTOC](https://github.com/discourse/DiscoTOC)** — when active, the button appears in the ToC instead of the timeline (no duplicates).
+- **[Reader Mode](https://github.com/discourse/reader-mode)** — optional `Keep in reader mode` setting keeps the button visible.
 
 ## Install
 
@@ -15,8 +18,8 @@ Discourse **theme component**: moves the **discourse-ai** topic summarize button
 
 ## Settings
 
-- *Show in timeline* - Show the summarize button in the topic timeline controls (right sidebar)
-- *Keep in reader mode* - Keep the summarize button visible in the timeline when Reader Mode is active (disables by default)
+- **Show in timeline** — Show the summarize button in the sidebar (timeline or ToC). Enabled by default.
+- **Keep in reader mode** — Keep the summarize button visible when Reader Mode is active. Disabled by default.
 
 ## License
 

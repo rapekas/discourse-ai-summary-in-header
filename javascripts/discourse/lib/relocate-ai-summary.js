@@ -97,3 +97,28 @@ export function addButtonToToc({ container, rootDocument = document }) {
     toc.insertBefore(btn, toc.firstChild);
   }
 }
+
+/**
+ * Creates an AI summarize button inside `.title-wrapper` (mobile placement).
+ */
+export function addButtonToTitle({ container, rootDocument = document }) {
+  const titleWrapper = rootDocument.querySelector(
+    "#topic-title .title-wrapper"
+  );
+  if (!titleWrapper) {
+    return;
+  }
+
+  if (titleWrapper.querySelector(".ai-summary-title-btn")) {
+    return;
+  }
+
+  const btn = createSummaryButton(
+    container,
+    rootDocument,
+    "ai-summary-title-btn"
+  );
+  if (btn) {
+    titleWrapper.appendChild(btn);
+  }
+}

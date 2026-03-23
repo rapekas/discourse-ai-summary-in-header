@@ -24,6 +24,14 @@
   }
 }
 
+// Summarize button inside topic title (mobile placement).
+#topic-title .title-wrapper .ai-summary-title-btn {
+  width: 100%;
+  box-sizing: border-box;
+  justify-content: center;
+  margin-top: 0.5em;
+}
+
 // When keep_in_reader_mode is on, override Reader Mode opacity for
 // our button and nearby controls; unify visual style.
 html.ai-summary-keep-in-reader-mode .reader-mode {
