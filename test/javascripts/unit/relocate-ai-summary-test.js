@@ -67,239 +67,224 @@ function buildContainer({ summarizable = true } = {}) {
   };
 }
 
-module(
-  "AI Summary In Topic Header | addButtonToTimeline",
-  function () {
-    test("creates button in timeline-controls", function (assert) {
-      const { doc, timelineControls } = buildDoc();
-      const container = buildContainer();
+module("AI Summary In Topic Header | addButtonToTimeline", function () {
+  test("creates button in timeline-controls", function (assert) {
+    const { doc, timelineControls } = buildDoc();
+    const container = buildContainer();
 
-      addButtonToTimeline({ container, rootDocument: doc });
+    addButtonToTimeline({ container, rootDocument: doc });
 
-      const btn = timelineControls.querySelector(".ai-summary-timeline-btn");
-      assert.ok(btn, "button created in timeline");
-      assert.strictEqual(
-        timelineControls.lastElementChild,
-        btn,
-        "appended after existing buttons"
-      );
-    });
+    const btn = timelineControls.querySelector(".ai-summary-timeline-btn");
+    assert.ok(btn, "button created in timeline");
+    assert.strictEqual(
+      timelineControls.lastElementChild,
+      btn,
+      "appended after existing buttons"
+    );
+  });
 
-    test("idempotent — does not insert a second button", function (assert) {
-      const { doc, timelineControls } = buildDoc();
-      const container = buildContainer();
+  test("idempotent — does not insert a second button", function (assert) {
+    const { doc, timelineControls } = buildDoc();
+    const container = buildContainer();
 
-      addButtonToTimeline({ container, rootDocument: doc });
-      addButtonToTimeline({ container, rootDocument: doc });
+    addButtonToTimeline({ container, rootDocument: doc });
+    addButtonToTimeline({ container, rootDocument: doc });
 
-      assert.strictEqual(
-        timelineControls.querySelectorAll(".ai-summary-timeline-btn").length,
-        1,
-        "only one button in timeline"
-      );
-    });
+    assert.strictEqual(
+      timelineControls.querySelectorAll(".ai-summary-timeline-btn").length,
+      1,
+      "only one button in timeline"
+    );
+  });
 
-    test("no-op when timeline-controls is missing", function (assert) {
-      const { doc } = buildDoc();
-      doc.querySelector(".timeline-controls").remove();
-      const container = buildContainer();
+  test("no-op when timeline-controls is missing", function (assert) {
+    const { doc } = buildDoc();
+    doc.querySelector(".timeline-controls").remove();
+    const container = buildContainer();
 
-      addButtonToTimeline({ container, rootDocument: doc });
+    addButtonToTimeline({ container, rootDocument: doc });
 
-      assert.ok(true, "no error thrown");
-    });
+    assert.ok(true, "no error thrown");
+  });
 
-    test("no-op when topic is not summarizable", function (assert) {
-      const { doc, timelineControls } = buildDoc();
-      const container = buildContainer({ summarizable: false });
+  test("no-op when topic is not summarizable", function (assert) {
+    const { doc, timelineControls } = buildDoc();
+    const container = buildContainer({ summarizable: false });
 
-      addButtonToTimeline({ container, rootDocument: doc });
+    addButtonToTimeline({ container, rootDocument: doc });
 
-      assert.strictEqual(
-        timelineControls.querySelectorAll(".ai-summary-timeline-btn").length,
-        0,
-        "no button when not summarizable"
-      );
-    });
-  }
-);
+    assert.strictEqual(
+      timelineControls.querySelectorAll(".ai-summary-timeline-btn").length,
+      0,
+      "no button when not summarizable"
+    );
+  });
+});
 
-module(
-  "AI Summary In Topic Header | addButtonToToc",
-  function () {
-    test("creates button at the top of ToC", function (assert) {
-      const { doc, tocMain } = buildDoc();
-      const container = buildContainer();
+module("AI Summary In Topic Header | addButtonToToc", function () {
+  test("creates button at the top of ToC", function (assert) {
+    const { doc, tocMain } = buildDoc();
+    const container = buildContainer();
 
-      addButtonToToc({ container, rootDocument: doc });
+    addButtonToToc({ container, rootDocument: doc });
 
-      const buttons = tocMain.querySelectorAll(".ai-summary-toc-btn");
-      assert.strictEqual(buttons.length, 1, "one button in ToC");
-      assert.ok(
-        tocMain.firstElementChild.classList.contains("ai-summary-toc-btn"),
-        "button is first child"
-      );
-    });
+    const buttons = tocMain.querySelectorAll(".ai-summary-toc-btn");
+    assert.strictEqual(buttons.length, 1, "one button in ToC");
+    assert.ok(
+      tocMain.firstElementChild.classList.contains("ai-summary-toc-btn"),
+      "button is first child"
+    );
+  });
 
-    test("idempotent — does not insert a second button", function (assert) {
-      const { doc, tocMain } = buildDoc();
-      const container = buildContainer();
+  test("idempotent — does not insert a second button", function (assert) {
+    const { doc, tocMain } = buildDoc();
+    const container = buildContainer();
 
-      addButtonToToc({ container, rootDocument: doc });
-      addButtonToToc({ container, rootDocument: doc });
+    addButtonToToc({ container, rootDocument: doc });
+    addButtonToToc({ container, rootDocument: doc });
 
-      assert.strictEqual(
-        tocMain.querySelectorAll(".ai-summary-toc-btn").length,
-        1,
-        "still only one button"
-      );
-    });
+    assert.strictEqual(
+      tocMain.querySelectorAll(".ai-summary-toc-btn").length,
+      1,
+      "still only one button"
+    );
+  });
 
-    test("no-op when .d-toc-main is missing", function (assert) {
-      const { doc } = buildDoc();
-      doc.querySelector(".d-toc-main").remove();
-      const container = buildContainer();
+  test("no-op when .d-toc-main is missing", function (assert) {
+    const { doc } = buildDoc();
+    doc.querySelector(".d-toc-main").remove();
+    const container = buildContainer();
 
-      addButtonToToc({ container, rootDocument: doc });
+    addButtonToToc({ container, rootDocument: doc });
 
-      assert.ok(true, "no error thrown");
-    });
+    assert.ok(true, "no error thrown");
+  });
 
-    test("no-op when topic is not summarizable", function (assert) {
-      const { doc, tocMain } = buildDoc();
-      const container = buildContainer({ summarizable: false });
+  test("no-op when topic is not summarizable", function (assert) {
+    const { doc, tocMain } = buildDoc();
+    const container = buildContainer({ summarizable: false });
 
-      addButtonToToc({ container, rootDocument: doc });
+    addButtonToToc({ container, rootDocument: doc });
 
-      assert.strictEqual(
-        tocMain.querySelectorAll(".ai-summary-toc-btn").length,
-        0,
-        "no button when not summarizable"
-      );
-    });
-  }
-);
+    assert.strictEqual(
+      tocMain.querySelectorAll(".ai-summary-toc-btn").length,
+      0,
+      "no button when not summarizable"
+    );
+  });
+});
 
-module(
-  "AI Summary In Topic Header | addButtonToTitle",
-  function () {
-    test("creates button in title-wrapper", function (assert) {
-      const { doc, titleWrapper } = buildDoc();
-      const container = buildContainer();
+module("AI Summary In Topic Header | addButtonToTitle", function () {
+  test("creates button in title-wrapper", function (assert) {
+    const { doc, titleWrapper } = buildDoc();
+    const container = buildContainer();
 
-      addButtonToTitle({ container, rootDocument: doc });
+    addButtonToTitle({ container, rootDocument: doc });
 
-      const btn = titleWrapper.querySelector(".ai-summary-title-btn");
-      assert.ok(btn, "button created in title-wrapper");
-      assert.strictEqual(
-        titleWrapper.lastElementChild,
-        btn,
-        "appended after existing children"
-      );
-    });
+    const btn = titleWrapper.querySelector(".ai-summary-title-btn");
+    assert.ok(btn, "button created in title-wrapper");
+    assert.strictEqual(
+      titleWrapper.lastElementChild,
+      btn,
+      "appended after existing children"
+    );
+  });
 
-    test("idempotent — does not insert a second button", function (assert) {
-      const { doc, titleWrapper } = buildDoc();
-      const container = buildContainer();
+  test("idempotent — does not insert a second button", function (assert) {
+    const { doc, titleWrapper } = buildDoc();
+    const container = buildContainer();
 
-      addButtonToTitle({ container, rootDocument: doc });
-      addButtonToTitle({ container, rootDocument: doc });
+    addButtonToTitle({ container, rootDocument: doc });
+    addButtonToTitle({ container, rootDocument: doc });
 
-      assert.strictEqual(
-        titleWrapper.querySelectorAll(".ai-summary-title-btn").length,
-        1,
-        "only one button in title-wrapper"
-      );
-    });
+    assert.strictEqual(
+      titleWrapper.querySelectorAll(".ai-summary-title-btn").length,
+      1,
+      "only one button in title-wrapper"
+    );
+  });
 
-    test("no-op when #topic-title is missing", function (assert) {
-      const { doc } = buildDoc();
-      doc.querySelector("#topic-title").remove();
-      const container = buildContainer();
+  test("no-op when #topic-title is missing", function (assert) {
+    const { doc } = buildDoc();
+    doc.querySelector("#topic-title").remove();
+    const container = buildContainer();
 
-      addButtonToTitle({ container, rootDocument: doc });
+    addButtonToTitle({ container, rootDocument: doc });
 
-      assert.ok(true, "no error thrown");
-    });
+    assert.ok(true, "no error thrown");
+  });
 
-    test("no-op when topic is not summarizable", function (assert) {
-      const { doc, titleWrapper } = buildDoc();
-      const container = buildContainer({ summarizable: false });
+  test("no-op when topic is not summarizable", function (assert) {
+    const { doc, titleWrapper } = buildDoc();
+    const container = buildContainer({ summarizable: false });
 
-      addButtonToTitle({ container, rootDocument: doc });
+    addButtonToTitle({ container, rootDocument: doc });
 
-      assert.strictEqual(
-        titleWrapper.querySelectorAll(".ai-summary-title-btn").length,
-        0,
-        "no button when not summarizable"
-      );
-    });
-  }
-);
+    assert.strictEqual(
+      titleWrapper.querySelectorAll(".ai-summary-title-btn").length,
+      0,
+      "no button when not summarizable"
+    );
+  });
+});
 
-module(
-  "AI Summary In Topic Header | removeStaleButtons",
-  function () {
-    test("removes buttons that don't match keepClass", function (assert) {
-      const { doc, titleWrapper } = buildDoc();
-      const container = buildContainer();
+module("AI Summary In Topic Header | removeStaleButtons", function () {
+  test("removes buttons that don't match keepClass", function (assert) {
+    const { doc, titleWrapper } = buildDoc();
+    const container = buildContainer();
 
-      addButtonToTitle({ container, rootDocument: doc });
-      assert.strictEqual(
-        doc.querySelectorAll(".ai-summary-btn").length,
-        1,
-        "one button before cleanup"
-      );
+    addButtonToTitle({ container, rootDocument: doc });
+    assert.strictEqual(
+      doc.querySelectorAll(".ai-summary-btn").length,
+      1,
+      "one button before cleanup"
+    );
 
-      removeStaleButtons("ai-summary-toc-btn", doc);
+    removeStaleButtons("ai-summary-toc-btn", doc);
 
-      assert.strictEqual(
-        titleWrapper.querySelectorAll(".ai-summary-title-btn").length,
-        0,
-        "title button removed"
-      );
-    });
+    assert.strictEqual(
+      titleWrapper.querySelectorAll(".ai-summary-title-btn").length,
+      0,
+      "title button removed"
+    );
+  });
 
-    test("keeps button that matches keepClass", function (assert) {
-      const { doc } = buildDoc();
-      const container = buildContainer();
+  test("keeps button that matches keepClass", function (assert) {
+    const { doc } = buildDoc();
+    const container = buildContainer();
 
-      addButtonToToc({ container, rootDocument: doc });
-      removeStaleButtons("ai-summary-toc-btn", doc);
+    addButtonToToc({ container, rootDocument: doc });
+    removeStaleButtons("ai-summary-toc-btn", doc);
 
-      assert.strictEqual(
-        doc.querySelectorAll(".ai-summary-toc-btn").length,
-        1,
-        "matching button preserved"
-      );
-    });
+    assert.strictEqual(
+      doc.querySelectorAll(".ai-summary-toc-btn").length,
+      1,
+      "matching button preserved"
+    );
+  });
 
-    test("cleans up during layout transition (title → toc)", function (assert) {
-      const { doc, tocMain } = buildDoc();
-      const container = buildContainer();
+  test("cleans up during layout transition (title → toc)", function (assert) {
+    const { doc, tocMain } = buildDoc();
+    const container = buildContainer();
 
-      addButtonToTitle({ container, rootDocument: doc });
-      assert.ok(
-        doc.querySelector(".ai-summary-title-btn"),
-        "title button exists"
-      );
+    addButtonToTitle({ container, rootDocument: doc });
+    assert.ok(
+      doc.querySelector(".ai-summary-title-btn"),
+      "title button exists"
+    );
 
-      removeStaleButtons("ai-summary-toc-btn", doc);
-      addButtonToToc({ container, rootDocument: doc });
+    removeStaleButtons("ai-summary-toc-btn", doc);
+    addButtonToToc({ container, rootDocument: doc });
 
-      assert.notOk(
-        doc.querySelector(".ai-summary-title-btn"),
-        "title button removed"
-      );
-      assert.ok(
-        tocMain.querySelector(".ai-summary-toc-btn"),
-        "toc button added"
-      );
-      assert.strictEqual(
-        doc.querySelectorAll(".ai-summary-btn").length,
-        1,
-        "exactly one button remains"
-      );
-    });
-  }
-);
+    assert.notOk(
+      doc.querySelector(".ai-summary-title-btn"),
+      "title button removed"
+    );
+    assert.ok(tocMain.querySelector(".ai-summary-toc-btn"), "toc button added");
+    assert.strictEqual(
+      doc.querySelectorAll(".ai-summary-btn").length,
+      1,
+      "exactly one button remains"
+    );
+  });
+});

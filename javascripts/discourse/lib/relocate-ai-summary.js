@@ -65,13 +65,11 @@ function createSummaryButton(container, rootDocument, extraClass) {
  * don't leave stale duplicates.
  */
 export function removeStaleButtons(keepClass, rootDocument = document) {
-  rootDocument
-    .querySelectorAll(".ai-summary-btn")
-    .forEach((btn) => {
-      if (!btn.classList.contains(keepClass)) {
-        btn.remove();
-      }
-    });
+  rootDocument.querySelectorAll(".ai-summary-btn").forEach((btn) => {
+    if (!btn.classList.contains(keepClass)) {
+      btn.remove();
+    }
+  });
 }
 
 /**
@@ -87,7 +85,11 @@ export function addButtonToTimeline({ container, rootDocument = document }) {
     return;
   }
 
-  const btn = createSummaryButton(container, rootDocument, "ai-summary-timeline-btn");
+  const btn = createSummaryButton(
+    container,
+    rootDocument,
+    "ai-summary-timeline-btn"
+  );
   if (btn) {
     timeline.appendChild(btn);
   }
@@ -107,7 +109,11 @@ export function addButtonToToc({ container, rootDocument = document }) {
     return;
   }
 
-  const btn = createSummaryButton(container, rootDocument, "ai-summary-toc-btn");
+  const btn = createSummaryButton(
+    container,
+    rootDocument,
+    "ai-summary-toc-btn"
+  );
   if (btn) {
     toc.insertBefore(btn, toc.firstChild);
   }
