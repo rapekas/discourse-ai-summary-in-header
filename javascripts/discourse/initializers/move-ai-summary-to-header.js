@@ -23,13 +23,13 @@ export default apiInitializer("2.0.0", (api) => {
   }
 
   const run = debounce(() => {
+    if (!settings.show_in_timeline) {
+      return;
+    }
     schedule("afterRender", () => {
-      const tocPresent =
-        settings.show_in_toc && document.querySelector(".d-toc-main");
-
-      if (tocPresent) {
+      if (document.querySelector(".d-toc-main")) {
         addButtonToToc({ container });
-      } else if (settings.show_in_timeline) {
+      } else {
         addButtonToTimeline({ container });
       }
     });
