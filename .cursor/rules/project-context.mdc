@@ -1,0 +1,36 @@
+---
+description: Project context and architecture for discourse-ai-summary-in-header theme component
+alwaysApply: true
+---
+
+# Project context
+
+## What this is
+
+Discourse **theme component** that moves the discourse-ai summarize button from the topic map into `#topic-title .title-wrapper` (next to `h1`). Does not fork discourse-ai — uses DOM relocation via MutationObserver.
+
+## Key files
+
+- `javascripts/discourse/lib/relocate-ai-summary.js` — `relocateSummarizeSection(doc)`: finds `.topic-map .ai-summarization-button`, walks up to its `section.toggle-summary`, moves it after `h1` inside `.title-wrapper`.
+- `javascripts/discourse/initializers/move-ai-summary-to-header.js` — `apiInitializer`, debounced `run()` guarded by `settings.keep_original_button`, `MutationObserver` on `#main-outlet`, `api.onPageChange`.
+- `common/common.scss` — flex layout for `.title-wrapper`; responsive via `@use "lib/viewport"` + `@include viewport.until(md)` / `viewport.until(sm)`.
+- `settings.yml` — `keep_original_button` (bool, default false). When true, the initializer skips relocation.
+- `locales/en.yml`, `locales/ru.yml` — setting descriptions under `theme_metadata.settings`, theme description under `theme_metadata.description`.
+
+## Important conventions
+
+- **SCSS breakpoints:** use `@include viewport.until(md)` / `viewport.until(sm)`, never `@include breakpoint(...)`. `@discourse/lint-configs` enables `discourse/no-breakpoint-mixin` — CI Stylelint will fail on `breakpoint()`.
+- **Theme settings in JS:** accessed as global `settings.key_name` (no import needed).
+- **Locales:** `I18n.t(themePrefix("key"))` in JS, `{{theme-i18n "key"}}` in HBS. Setting descriptions go under `theme_metadata.settings.<key>`.
+- **Ruby symbols with colons:** must be quoted: `:"topics:create"` (not `:topics:create`).
+- **Core features spec:** follows Horizon pattern — `skip_examples: [:"search:quick_search", :"topics:create"]` + separate "creates a new topic" via `/new-topic`.
+
+## Tests
+
+- QUnit: `test/javascripts/unit/relocate-ai-summary-test.js`
+- System: `spec/system/topic_page_spec.rb` (checks `#topic-title .title-wrapper h1`)
+- System: `spec/system/core_features_spec.rb` (shared example from Discourse core)
+
+## CI
+
+`.github/workflows/discourse-theme.yml` reuses `discourse/.github` workflow. Linting runs in `discourse/discourse_test:slim`, system/frontend tests in `slim-browsers`.

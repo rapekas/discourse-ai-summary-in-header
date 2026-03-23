@@ -14,6 +14,9 @@ export default apiInitializer("2.0.0", (api) => {
   let observer;
 
   const run = debounce(() => {
+    if (settings.keep_original_button) {
+      return;
+    }
     schedule("afterRender", () => relocateSummarizeSection());
   }, 120);
 

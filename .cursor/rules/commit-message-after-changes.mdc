@@ -1,0 +1,14 @@
+---
+description: After code changes, suggest a Git/GitHub commit message in chat
+alwaysApply: true
+---
+
+# Commit message after changes
+
+Whenever you **modify project files** (code, config, tests, docs in this repo), end your reply with a short section:
+
+**Commit message:** `…`
+
+Use one line in [Conventional Commits](https://www.conventionalcommits.org/) style when it fits, e.g. `fix(spec): quote symbol for RuboCop`, `feat(header): relocate AI summarize control`. If the change is mixed, use a clear imperative subject (~72 chars).
+
+If there were **no file edits** in the turn, omit the commit message block.
