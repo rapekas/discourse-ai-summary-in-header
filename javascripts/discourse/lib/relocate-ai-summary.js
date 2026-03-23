@@ -1,22 +1,26 @@
 import { iconHTML } from "discourse-common/lib/icon-library";
 import I18n from "discourse-i18n";
 
-let modalModule = null;
+let AiSummaryModalCached = null;
 
-async function loadAiSummaryModal() {
-  if (!modalModule) {
-    try {
-      modalModule = await import(
-        "discourse/plugins/discourse-ai/discourse/components/modal/ai-summary-modal"
-      );
-    } catch {
-      // eslint-disable-next-line no-console
-      console.warn(
-        "discourse-ai plugin not available — AI summary button disabled"
-      );
-    }
+function loadAiSummaryModal() {
+  if (AiSummaryModalCached) {
+    return AiSummaryModalCached;
   }
-  return modalModule?.default;
+
+  const moduleName =
+    "discourse/plugins/discourse-ai/discourse/components/modal/ai-summary-modal";
+
+  try {
+    const m = requirejs(moduleName);
+    AiSummaryModalCached = m?.default || m;
+  } catch {
+    // eslint-disable-next-line no-console
+    console.warn(
+      "discourse-ai plugin not available — AI summary button disabled"
+    );
+  }
+  return AiSummaryModalCached;
 }
 
 function createSummaryButton(container, rootDocument, extraClass) {
@@ -34,11 +38,11 @@ function createSummaryButton(container, rootDocument, extraClass) {
   const label = I18n.t("summary.buttons.generate");
   btn.innerHTML = `${icon} <span class="d-button-label">${label}</span>`;
 
-  btn.addEventListener("click", async (e) => {
+  btn.addEventListener("click", (e) => {
     e.preventDefault();
     e.stopPropagation();
 
-    const AiSummaryModal = await loadAiSummaryModal();
+    const AiSummaryModal = loadAiSummaryModal();
     if (!AiSummaryModal) {
       return;
     }
