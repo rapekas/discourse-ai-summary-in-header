@@ -1,33 +1,73 @@
+import { iconHTML } from "discourse-common/lib/icon-library";
+import I18n from "discourse-i18n";
+
+let modalModule = null;
+
+async function loadAiSummaryModal() {
+  if (!modalModule) {
+    try {
+      modalModule = await import(
+        "discourse/plugins/discourse-ai/discourse/components/modal/ai-summary-modal"
+      );
+    } catch {
+      // eslint-disable-next-line no-console
+      console.warn(
+        "discourse-ai plugin not available — AI summary button disabled"
+      );
+    }
+  }
+  return modalModule?.default;
+}
+
 /**
- * Clones the AI summarize button into `.timeline-controls`, appended after
- * the existing control buttons. Proxy-clicks the original Glimmer button
- * so that all Ember action bindings keep working.
+ * Creates an AI summarize button in `.timeline-controls`.
+ * On click, opens AiSummaryModal directly via the modal service —
+ * no dependency on topic map being in the DOM.
  *
- * @param {Document} [rootDocument=document]
+ * @param {Object} options
+ * @param {Object} options.container - Discourse app container (for service lookups)
+ * @param {Document} [options.rootDocument=document]
  */
-export function cloneButtonToTimeline(rootDocument = document) {
+export function addButtonToTimeline({ container, rootDocument = document }) {
   const timeline = rootDocument.querySelector(".timeline-controls");
   if (!timeline) {
     return;
   }
 
-  if (timeline.querySelector(".ai-summarization-button")) {
+  if (timeline.querySelector(".ai-summary-timeline-btn")) {
     return;
   }
 
-  const originalBtn = rootDocument.querySelector(
-    ".topic-map .ai-summarization-button"
-  );
-  if (!originalBtn) {
+  const topicController = container.lookup("controller:topic");
+  if (!topicController?.model?.summarizable) {
     return;
   }
 
-  const btn = originalBtn.cloneNode(true);
-  btn.classList.add("ai-summary-timeline-btn");
-  btn.addEventListener("click", (e) => {
+  const btn = rootDocument.createElement("button");
+  btn.type = "button";
+  btn.className = "btn btn-icon-text btn-default ai-summary-timeline-btn";
+  btn.title = I18n.t("summary.buttons.generate");
+
+  const icon = iconHTML("discourse-sparkles");
+  const label = I18n.t("summary.buttons.generate");
+  btn.innerHTML = `${icon} <span class="d-button-label">${label}</span>`;
+
+  btn.addEventListener("click", async (e) => {
     e.preventDefault();
     e.stopPropagation();
-    originalBtn.click();
+
+    const AiSummaryModal = await loadAiSummaryModal();
+    if (!AiSummaryModal) {
+      return;
+    }
+
+    const modalService = container.lookup("service:modal");
+    const topic = topicController.model;
+    const postStream = topic.postStream;
+
+    modalService.show(AiSummaryModal, {
+      model: { topic, postStream },
+    });
   });
 
   timeline.appendChild(btn);

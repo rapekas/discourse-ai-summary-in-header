@@ -1,23 +1,8 @@
 import { module, test } from "qunit";
-import { cloneButtonToTimeline } from "discourse/theme/lib/relocate-ai-summary";
+import { addButtonToTimeline } from "discourse/theme/lib/relocate-ai-summary";
 
-function buildTopicPageDoc() {
+function buildDoc() {
   const doc = document.implementation.createHTMLDocument("topic");
-
-  const topicMap = doc.createElement("div");
-  topicMap.className = "topic-map";
-
-  const section = doc.createElement("section");
-  section.className = "topic-map__additional-contents toggle-summary";
-
-  const button = doc.createElement("button");
-  button.type = "button";
-  button.className = "btn ai-summarization-button";
-  button.textContent = "Summarize";
-
-  section.appendChild(button);
-  topicMap.appendChild(section);
-  doc.body.appendChild(topicMap);
 
   const timelineControls = doc.createElement("div");
   timelineControls.className = "timeline-controls";
@@ -32,79 +17,80 @@ function buildTopicPageDoc() {
 
   doc.body.appendChild(timelineControls);
 
-  return { doc, button, topicMap, timelineControls, readerBtn, adminBtn };
+  return { doc, timelineControls };
+}
+
+function buildContainer({ summarizable = true } = {}) {
+  return {
+    lookup(name) {
+      if (name === "controller:topic") {
+        return {
+          model: {
+            summarizable,
+            postStream: {},
+          },
+        };
+      }
+      if (name === "service:modal") {
+        return { show() {} };
+      }
+      return null;
+    },
+  };
 }
 
 module(
-  "AI Summary In Topic Header | cloneButtonToTimeline",
+  "AI Summary In Topic Header | addButtonToTimeline",
   function () {
-    test("clones button into timeline-controls after existing buttons", function (assert) {
-      const { doc, timelineControls, adminBtn } = buildTopicPageDoc();
+    test("creates button in timeline-controls", function (assert) {
+      const { doc, timelineControls } = buildDoc();
+      const container = buildContainer();
 
-      cloneButtonToTimeline(doc);
+      addButtonToTimeline({ container, rootDocument: doc });
 
-      const btn = timelineControls.querySelector(".ai-summarization-button");
-      assert.ok(btn, "button cloned into timeline");
-      assert.ok(
-        btn.classList.contains("ai-summary-timeline-btn"),
-        "marker class applied"
-      );
+      const btn = timelineControls.querySelector(".ai-summary-timeline-btn");
+      assert.ok(btn, "button created in timeline");
       assert.strictEqual(
-        adminBtn.nextElementSibling,
+        timelineControls.lastElementChild,
         btn,
         "appended after existing buttons"
       );
     });
 
-    test("timeline button proxies click to original", function (assert) {
-      const { doc, button } = buildTopicPageDoc();
-      let clicked = false;
-      button.addEventListener("click", () => {
-        clicked = true;
-      });
-
-      cloneButtonToTimeline(doc);
-
-      const timelineBtn = doc.querySelector(
-        ".timeline-controls .ai-summarization-button"
-      );
-      timelineBtn.click();
-      assert.ok(clicked, "click on timeline button triggered original");
-    });
-
     test("idempotent — does not insert a second button", function (assert) {
-      const { doc, timelineControls } = buildTopicPageDoc();
+      const { doc, timelineControls } = buildDoc();
+      const container = buildContainer();
 
-      cloneButtonToTimeline(doc);
-      cloneButtonToTimeline(doc);
+      addButtonToTimeline({ container, rootDocument: doc });
+      addButtonToTimeline({ container, rootDocument: doc });
 
       assert.strictEqual(
-        timelineControls.querySelectorAll(".ai-summarization-button").length,
+        timelineControls.querySelectorAll(".ai-summary-timeline-btn").length,
         1,
         "only one button in timeline"
       );
     });
 
     test("no-op when timeline-controls is missing", function (assert) {
-      const { doc } = buildTopicPageDoc();
+      const { doc } = buildDoc();
       doc.querySelector(".timeline-controls").remove();
+      const container = buildContainer();
 
-      cloneButtonToTimeline(doc);
+      addButtonToTimeline({ container, rootDocument: doc });
 
       assert.ok(true, "no error thrown");
     });
 
-    test("no-op when original button is missing", function (assert) {
-      const { doc } = buildTopicPageDoc();
-      doc.querySelector(".ai-summarization-button").remove();
+    test("no-op when topic is not summarizable", function (assert) {
+      const { doc, timelineControls } = buildDoc();
+      const container = buildContainer({ summarizable: false });
 
-      cloneButtonToTimeline(doc);
+      addButtonToTimeline({ container, rootDocument: doc });
 
       assert.strictEqual(
-        doc.querySelectorAll(".timeline-controls .ai-summarization-button")
-          .length,
+        timelineControls.querySelectorAll(".ai-summary-timeline-btn").length,
         0,
-        "nothing cloned"
+        "no button when not summarizable"
       );
     });
   }
