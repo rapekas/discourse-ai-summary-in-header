@@ -13,6 +13,12 @@ Discourse **theme component**: moves the **discourse-ai** topic summarize button
 1. Admin → **Customize** → **Themes** → install this component (Git URL or upload).
 2. Enable the component on your active theme(s).
 
+## Settings
+
+- *Show in timeline* - Show the summarize button in the topic timeline controls (right sidebar)
+- *Show in toc* - Show the summarize button at the top of the Table of Contents sidebar
+- *Keep in reader mode* - Keep the summarize button visible in the timeline when Reader Mode is active (disables by default)
+
 ## License
 
 MIT — see [LICENSE.txt](LICENSE.txt).
